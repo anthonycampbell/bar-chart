@@ -1,0 +1,14 @@
+.bar-chart {
+  width: 500px;
+  height: 250px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.bar {
+  background-color: skyblue;
+  height: 100px;
+  width: 100px;
+}
