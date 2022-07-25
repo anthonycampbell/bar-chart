@@ -1,3 +1,9 @@
+function validateColor(c) {
+  let s = new Option().style;
+  s.color = c;
+  console.log()
+  return s.color === c;
+}
 function setCSS(bars, property, value) {
   if (property === 'background-color') {
     if (!validateColor(value)) return;
@@ -20,6 +26,21 @@ function applyBarOptions(bars, options) {
           console.log('Invalid input. Option valuePosition mus be one of top, bottom, or centre');
         }
         break;
+      case 'barSpacing':
+        if (typeof options[o] === 'number') {
+          setCSS(bars, 'margin-left', options[o] / 2);
+          setCSS(bars, 'margin-right', options[o] / 2);
+        }
+        break;
+      case 'barColour':
+        setCSS(bars, 'background-color', options[o]);
+        break;
+      /*case 'barWidth':
+        if (typeof options[o] === 'number'){
+          setCSS(bars, 'padding-left', options[o]/2);
+          setCSS(bars, 'padding-right', options[o]/2);
+        }
+        break;*/
     }
   }
 }
@@ -47,8 +68,12 @@ function drawBarChart(data, options, element) {
   element.append(barChart);
 }
 function main() {
-  let data = [100, 250, 500, 100, 400, 400, 400, 500, 600, 400, 500, 600, 400];
-  let options = {};
+  let data = [100, 250, 500, 100, 400];
+  let options = {
+    valuePosition: 'top',
+    barSpacing: 100,
+    barColour: 'rgb(0, 150, 0)'
+  };
   let demo = $("#demo");
   drawBarChart(data, options, demo);
   data = [3, 6, 8, 1, 9];
