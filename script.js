@@ -44,10 +44,11 @@ function applyBarOptions(bars, options) {
     }
   }
 }
-function makeBars(data, options, barChart) {
+function makeBars(data, options, chart) {
   let bars = [];
   let bar;
   let maxHeight = 0;
+  let barWindow = $('<div class="bar-window"></div>');
   for (let i = 0; i < data.length; i++) {
     bar = $('<span class="bar"></span>');
     bars.push({ element: bar, height: data[i] });
@@ -59,24 +60,42 @@ function makeBars(data, options, barChart) {
   for (bar of bars) {
     bar.element.text(bar.height)
     bar.element.height((bar.height / maxHeight) * 250);
-    barChart.append(bar.element);
+    barWindow.append(bar.element);
   }
+  chart.append(barWindow);
+  return maxHeight;
+}
+function makeTicks(maxHeight, chart, options){
+  let ticks = $('<div class="ticks"></div>')
+  chart.prepend(ticks);
+}
+function makeLabels(data, chart, options){
+  let label;
+  let labels = $('<div class="labels"></div>');
+  for (let i = 0; i < data.length; i++) {
+    label = $('<span class="label"></span>');
+    labels.append(label);
+  }
+  chart.append(labels);
 }
 function drawBarChart(data, options, element) {
   let barChart = $('<div class="bar-chart"></div>');
-  makeBars(data, options, barChart);
+  let labels = $('<div class="labels"></div>');
+  let maxHeight = makeBars(data, options, barChart);
+  makeTicks(maxHeight, barChart, options);
+  makeLabels(data, barChart, options);
   element.append(barChart);
 }
 function main() {
   let data = [100, 250, 500, 100, 400];
   let options = {
     valuePosition: 'top',
-    barSpacing: 100,
+    //barSpacing: 100,
     barColour: 'rgb(0, 150, 0)'
   };
   let demo = $("#demo");
   drawBarChart(data, options, demo);
-  data = [3, 6, 8, 1, 9];
+  data = [4, 2, 7, 4];
   options = {};
   demo = $("#demo1");
   drawBarChart(data, options, demo);

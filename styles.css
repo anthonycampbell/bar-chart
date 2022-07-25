@@ -1,17 +1,52 @@
-.bar-chart {
+.bar-chart{
+  min-width: 95px;
+  max-width: 525px;
+  width: fit-content;
+  height: 275px;
+  border: 1px solid black;
+}
+.ticks{
+  width: 25px;
+  height: 250px;
+  background-color: grey;
+  position: relative;
+  float: left;
+  height: 250px;
+}
+.bar-window {
+  float: left;
+  background-color: lightgrey;
   min-width: 70px;
   max-width: 500px;
-  width: fit-content;
   height: 250px;
-  border: 1px solid black;
   flex: 1;
   display: flex;
   overflow: auto;
   align-items: flex-end;
 }
-
 .bar {
   background-color: skyblue;
+  width: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.labels{
+  min-width: 70px;
+  max-width: 500px;
+  float: right;
+  clear: both;
+  height: 25px;
+  background-color: black;
+  flex: 1;
+  display: flex;
+  overflow: auto;
+  align-items: flex-end;
+}
+.label{
   width: 40px;
   margin-left: 10px;
   margin-right: 10px;
