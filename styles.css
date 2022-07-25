@@ -1,14 +1,22 @@
 .bar-chart {
-  width: 500px;
+  min-width: 70px;
+  max-width: 500px;
+  width: fit-content;
   height: 250px;
   border: 1px solid black;
+  flex: 1;
   display: flex;
-  justify-content: space-around;
+  overflow: auto;
   align-items: flex-end;
 }
 
 .bar {
   background-color: skyblue;
-  height: 100px;
-  width: 50px;
+  width: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
