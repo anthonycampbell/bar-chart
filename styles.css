@@ -13,6 +13,17 @@
   float: left;
   height: 250px;
 }
+.tick{
+  font-size: small;
+  text-align:right;
+  background-color: black;
+  width: 100%;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  position: relative;
+}
 .bar-window {
   float: left;
   background-color: lightgrey;
