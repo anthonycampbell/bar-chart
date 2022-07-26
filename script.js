@@ -64,24 +64,33 @@ const makeBars = function(data, options, chart) {
   chart.append(barWindow);
   return maxHeight;
 };
+const checkTickUnits = function(maxHeight, options) {
+  if (!options.tickUnits) {
+    options.tickUnits = maxHeight / 10;
+  }
+  if (typeof options.tickUnits !== 'number') {
+    options.tickUnits = maxHeight / 10;
+    console.log('Tick units must be a number');
+  }
+  if (maxHeight / options.tickUnits > 250) {
+    options.tickUnits = maxHeight / 10;
+    console.log('That is too many ticks!');
+  }
+  if (options.tickUnits > maxHeight) {
+    options.tickUnits = maxHeight / 10;
+    console.log('Tick units too tall');
+  }
+};
 const makeTicks = function(maxHeight, chart, options) {
   let ticks = $('<div class="ticks"></div>');
-  if (!options.tickUnits) options.tickUnits = maxHeight / 10;
-  if (typeof options.tickUnits === 'number') {
-    if (options.tickUnits < maxHeight) {
-      if (maxHeight / options.tickUnits > 250) {
-        options.tickUnits = maxHeight / 10;
-        console.log('That is too many ticks!');
-      }
-      let divOffset = 1;
-      for (let i = options.tickUnits; i <= maxHeight; i += options.tickUnits) {
-        let tick = $('<div class="tick"></div>');
-        let h = 250 - i / maxHeight * 250 - divOffset;
-        tick.css('top', h);
-        ticks.append(tick);
-        divOffset++;
-      }
-    }
+  checkTickUnits(maxHeight, options);
+  let divOffset = 1;
+  for (let i = options.tickUnits; i <= maxHeight; i += options.tickUnits) {
+    let tick = $('<div class="tick"></div>');
+    let h = 250 - i / maxHeight * 250 - divOffset;
+    tick.css('top', h);
+    ticks.append(tick);
+    divOffset++;
   }
   chart.prepend(ticks);
 };
@@ -101,7 +110,7 @@ const drawBarChart = function(data, element, options = {}) {
   makeTicks(maxHeight, barChart, options);
   makeLabels(data, barChart, options);
   element.append(barChart);
-}
+};
 
 const editTitle = function() {
   return false;
@@ -112,7 +121,7 @@ const main = function() {
   // { height: 500, label: 'grapes' },
   // { height: 100, label: 'pears' },
   // { height: 400, label: 'mangos' }];
-  let data = [100, 250, 500, 100, 400];
+  let data = [9, 1, 6, 3, 5];
   let options = {
     valuePosition: 'top',
     //barSpacing: 100,
