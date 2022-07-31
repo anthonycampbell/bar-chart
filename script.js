@@ -260,10 +260,12 @@ const main = function() {
     tickUnits: 100,
     labelColor: 'blue',
   };
-  let demo = $("#demo");
-  let demo1 = $("#demo1");
-  let demo2 = $("#demo2");
-  drawBarChart(data, demo, {});
-  drawBarChart(data0, demo1, options);
-  drawBarChart(data2, demo2, {});
+  $(document).ready(()=>{
+    let demo = $("#demo");
+    let demo1 = $("#demo1");
+    let demo2 = $("#demo2");
+    drawBarChart(data, demo, {});
+    drawBarChart(data0, demo1, options);
+    drawBarChart(data2, demo2, {});
+  });
 };
