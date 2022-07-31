@@ -52,15 +52,15 @@ const validData = function(elements) {
   let err = 'data must include array of number, array of objects ' +
   'with height and string or array of objects with ' +
   'array of objects with height and color and then a label';
-  if (typeof elements === 'object' && !Array.isArray(elements)){
-    for (let e in elements){
-      if (e === 'height' && Array.isArray(elements[e])){
-        for (let chunk of elements[e]){
-          if (typeof chunk === 'object'){
-            for (chunkData in chunk){
-              if (chunkData === 'chunkH' && !isNaN(chunk[chunkData])){
+  if (typeof elements === 'object' && !Array.isArray(elements)) {
+    for (let e in elements) {
+      if (e === 'height' && Array.isArray(elements[e])) {
+        for (let chunk of elements[e]) {
+          if (typeof chunk === 'object') {
+            for (let chunkData in chunk) {
+              if (chunkData === 'chunkH' && !isNaN(chunk[chunkData])) {
                 chunkObj['chunkH'] = chunk[chunkData];
-              } else if (chunkData === 'color' && validateColor(chunk[chunkData])){
+              } else if (chunkData === 'color' && validateColor(chunk[chunkData])) {
                 chunkObj['color'] = chunk[chunkData];
               }
             }
@@ -69,56 +69,62 @@ const validData = function(elements) {
           }
         }
         bar['height'] = chunks;
-      } else if (e === 'height' && typeof elements[e] === 'number' && !isNaN(elements[e])){
+      } else if (e === 'height' && typeof elements[e] === 'number' && !isNaN(elements[e])) {
         bar['height'] = [elements[e]];
-      } else if (e === 'label' && typeof elements[e] === 'string'){
+      } else if (e === 'label' && typeof elements[e] === 'string') {
         bar['label'] = elements[e];
       }
     }
     return bar;
   } else if (typeof elements === 'number' && !isNaN(elements)) {
-    return {height: elements, label: ''};
+    return {height: [elements], label: ''};
   } else {
     console.log(err);
-    return {height: 0, label: ''};
+    return {height: [0], label: ''};
   }
 };
-const makeBars = function(data, options, chart) {
+const processBars = function(cleanD) {
   let bars = [];
-  let bar;
+  let mh = 0;
+  let h;
+  let o = {};
+  for (let chunk of cleanD.height) {
+    typeof cleanD.height[0] === 'number' ? h = cleanD.height[0] : h = chunk.chunkH;
+    chunk.color ? o['color'] = chunk.color : null;
+    o['element'] = $('<span class="bar"></span>');
+    o['height'] = h;
+    bars.push(o);
+    mh += h;
+    o = {};
+  }
+  return {bars: bars, mh: mh};
+};
+const makeBars = function(data, options, chart) {
   let labels = [];
   let label;
   let maxHeight = 0;
   let d;
   let columns = [];
   let chunks = [];
+  let barStats;
   let barWindow = $('<div class="bar-window"></div>');
-  for (let i in data/*= 0; i < data.length; i++*/) {
+  for (let i in data) {
     d = validData(data[i]);
-    let mh = 0;
-    for (let chunk of d.height){
-      bar = $('<span class="bar"></span>');
-      bars.push({ element: bar, height: chunk.chunkH, color: chunk.color });
-      mh += chunk.chunkH;
-    }
-    chunks.push(bars);
-    bars = [];
+    barStats = processBars(d, maxHeight);
+    if (barStats.mh > maxHeight) maxHeight = barStats.mh;
+    chunks.push(barStats.bars);
     label = $(`<span class="label">${d.label}</span>`);
-    columns.push($(`<span class="column"></span>`));
     labels.push({element: label, label: d.label});
-    if (mh > maxHeight) maxHeight = mh;
+    columns.push($(`<span class="column"></span>`));
+    applyBarOptions(barStats.bars, labels, options);
   }
-  //applyBarOptions(bars, labels, options);
   for (let i = 0; i < columns.length; i++) {
-    for (let j = 0; j < chunks[i].length; j++){
+    for (let j = 0; j < chunks[i].length; j++) {
       chunks[i][j].element.text(chunks[i][j].height);
       chunks[i][j].element.height((chunks[i][j].height / maxHeight) * 250);
       chunks[i][j].element.css('background-color', chunks[i][j].color);
       columns[i].append(chunks[i][j].element);
     }
-    //bars[i].element.text(bars[i].height);
-    //bars[i].element.height((bars[i].height / maxHeight) * 250);
-    // columns[i].append(chunks[i].element);
     columns[i].append(labels[i].element);
     barWindow.append(columns[i]);
   }
@@ -169,7 +175,6 @@ const drawBarChart = function(data, element, options = {}) {
   let container = $('<div class="container"></div>');
   let barChart = $('<div class="bar-chart"></div>');
   let maxHeight = makeBars(data, options, barChart);
-  console.log(maxHeight);
   makeTicks(maxHeight, barChart, options);
   makeTitle(container, options);
   container.append(barChart);
@@ -193,19 +198,19 @@ const main = function() {
       { chunkH: 250, color: 'rgb(150, 150, 0)' },
       { chunkH: 250, color: 'rgb(0, 150, 150)' },
       { chunkH: 250, color: 'rgb(150, 0, 150)' } ],
-      label: 'fruits'
+    label: 'fruits'
     },
     { height: [
       { chunkH: 500, color: 'rgb(150, 150, 0)' },
       { chunkH: 500, color: 'rgb(0, 150, 150)' },
       { chunkH: 500, color: 'rgb(150, 0, 150)' } ],
-      label: 'vegetables'
+    label: 'vegetables'
     },
     { height: [
       { chunkH: 100, color: 'rgb(150, 150, 0)' },
       { chunkH: 100, color: 'rgb(0, 150, 150)' },
       { chunkH: 100, color: 'rgb(150, 0, 150)' } ],
-      label: 'meats'
+    label: 'meats'
     },
     { height: [
       { chunkH: 400, color: 'rgb(150, 150, 0)' },
@@ -213,20 +218,48 @@ const main = function() {
       { chunkH: 400, color: 'rgb(150, 0, 150)' } ],
     label: 'dairy'
     }];
+  let data2 = [
+    { height: [
+      { chunkH: 200, color: 'rgb(150, 150, 0)' },
+      { chunkH: 125, color: 'rgb(0, 150, 150)' },
+      { chunkH: 50, color: 'rgb(150, 0, 150)' } ],
+    label: 'snacks'
+    },
+    { height: [
+      { chunkH: 150, color: 'rgb(150, 0, 0)' },
+      { chunkH: 250, color: 'rgb(0, 150, 0)' },
+      { chunkH: 350, color: 'rgb(0, 0, 150)' } ],
+    label: 'fruits'
+    },
+    { height: [
+      { chunkH: 100, color: 'rgb(100, 100, 0)' },
+      { chunkH: 600, color: 'rgb(0, 100, 100)' },
+      { chunkH: 200, color: 'rgb(100, 0, 100)' } ],
+    label: 'vegetables'
+    },
+    { height: [
+      { chunkH: 350, color: 'rgb(250, 150, 0)' },
+      { chunkH: 375, color: 'rgb(0, 250, 150)' },
+      { chunkH: 225, color: 'rgb(150, 0, 250)' } ],
+    label: 'meats'
+    },
+    { height: [
+      { chunkH: 415, color: 'rgb(150, 50, 50)' },
+      { chunkH: 450, color: 'rgb(50, 150, 50)' },
+      { chunkH: 100, color: 'rgb(50, 50, 150)' } ],
+    label: 'dairy'
+    }];
   let options = {
-    valuePosition: 'top',
+    valuePosition: 'bottom',
     barColour: 'rgb(0, 150, 0)',
     barSpacing: 100,
     barWidth: 50,
     title: 'My Bar Chart',
     titleFontSize: 32,
     titleColor: 'rgb(0, 150, 150)',
-    tickUnits: 20,
+    tickUnits: 100,
     labelColor: 'blue',
   };
   let demo = $("#demo");
-  drawBarChart(data1, demo, options);
+  drawBarChart(data2, demo, {});
 };
-
-// ================================== TODO ============================
-// refactor
