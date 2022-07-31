@@ -1,9 +1,20 @@
+.container{
+  text-align: center;
+}
 .bar-chart{
   min-width: 95px;
   max-width: 525px;
   width: fit-content;
   height: 275px;
   border: 1px solid black;
+  margin: auto;
+  display: flex;
+}
+.title{
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  box-sizing: content-box;
 }
 .ticks{
   width: 25px;
@@ -12,6 +23,7 @@
   position: relative;
   float: left;
   height: 250px;
+  align-self: flex-start;
 }
 .tick{
   font-size: small;
@@ -26,14 +38,14 @@
 }
 .bar-window {
   float: left;
-  background-color: lightgrey;
   min-width: 70px;
   max-width: 500px;
-  height: 250px;
+  height: 275px;
   flex: 1;
   display: flex;
   overflow: auto;
   align-items: flex-end;
+  align-self: flex-end;
 }
 .bar {
   background-color: skyblue;
@@ -51,18 +63,19 @@
   float: right;
   clear: both;
   height: 25px;
-  background-color: black;
+  background-color: darkgrey;
   flex: 1;
   display: flex;
   overflow: auto;
   align-items: flex-end;
 }
 .label{
-  width: 40px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding: 0 5px;
+  height: 25px;
+  margin: 0;
   display: flex;
   align-items: center;
+  text-align: center;
   justify-content: center;
+  overflow:scroll;
+  border-top: 1px solid black;
 }
