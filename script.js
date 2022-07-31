@@ -261,5 +261,9 @@ const main = function() {
     labelColor: 'blue',
   };
   let demo = $("#demo");
-  drawBarChart(data2, demo, {});
+  let demo1 = $("#demo1");
+  let demo2 = $("#demo2");
+  drawBarChart(data, demo, {});
+  drawBarChart(data0, demo1, options);
+  drawBarChart(data2, demo2, {});
 };
